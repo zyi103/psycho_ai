@@ -1,4 +1,4 @@
-__all__ = ['get_glove_100d', 'pse', 'jnd', 'plot_pse', 'bisect_search', 'twoafc_experiment', 'similarity', 'psy_cur']
+__all__ = ['get_glove_100d', 'pse', 'jnd', 'plot_pse', 'bisect_search', 'twoafc_experiment', 'similarity', 'psy_cur', 'pse2']
 
 import os 
 import wget
@@ -8,6 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from scipy.spatial.distance import cosine
+import re
 
 def similarity(x, y):
     return 1 - cosine(x, y)
@@ -173,6 +174,20 @@ def pse(embeddings_dict, target, pairs):
     handpicked_pse['PSE'] = handpicked_pse['PSE'].astype('float')
     handpicked_pse = handpicked_pse.groupby('target')['PSE'].mean().sort_values()
     return handpicked_pse.to_dict()
+
+def pse2(embeddings_dict, target_list, pairs):
+    pse_dict = {}
+    for phase in target_list:
+        w_list = re.split(r'\s+|-|_|\.',phase)
+        w_list = list(filter(None, w_list))
+        counter = 0
+        for w in w_list:
+            for p in pairs:
+                l, r = p[0], p[1]
+                counter += bisect_search(l, r, w, embeddings_dict, delta_alpha=1/100)
+        pse = counter / len(pairs) / len(w_list)
+        pse_dict[phase] = pse
+    return {k: v for k, v in sorted(pse_dict.items(), key=lambda item: item[1])}
 
 def plot_pse(pse_score):
     plt.figure(figsize = (6, 6), dpi=150)
