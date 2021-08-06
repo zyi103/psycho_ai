@@ -151,31 +151,7 @@ def jnd(embedding_list, target, pairs):
         handpicked_jnd = pd.concat(pse_list).groupby('target').var()
     return handpicked_jnd.sort_values().to_dict()
 
-def pse(embeddings_dict, target, pairs):
-    w_dict = {} 
-    w_dict['target'] = []
-    w_dict['Left'] = []
-    w_dict['Right'] = []
-    for n in target:
-        for pair in pairs:
-            w_dict['Left'].append(pair[0])
-            w_dict['Right'].append(pair[1])
-            w_dict['target'].append(n)
-    handpicked_pse = pd.DataFrame(w_dict)
-
-    R, C = handpicked_pse.shape
-    handpicked_pse['PSE'] = None
-    for i in range(R):
-        n = handpicked_pse.loc[i]['target']
-        l = handpicked_pse.loc[i]['Left']  
-        r = handpicked_pse.loc[i]['Right']
-        handpicked_pse.loc[i, 'PSE'] = bisect_search(l, r, n, embeddings_dict, delta_alpha=1/100)
-
-    handpicked_pse['PSE'] = handpicked_pse['PSE'].astype('float')
-    handpicked_pse = handpicked_pse.groupby('target')['PSE'].mean().sort_values()
-    return handpicked_pse.to_dict()
-
-def pse2(embeddings_dict, target_list, pairs):
+def pse(embeddings_dict, target_list, pairs):
     pse_dict = {}
     for phase in target_list:
         w_list = re.split(r'\s+|-|_|\.',phase)
