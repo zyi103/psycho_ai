@@ -15,4 +15,4 @@ female_male_pairs = [['woman', 'man'],
                      ['sister', 'brother']]
                 
 # print(two_afc.pse(embedding, target_occupations, female_male_pairs))
-print(two_afc.pse2(embedding, target_occupations, female_male_pairs))
+print(two_afc.pse(embedding, target_occupations, female_male_pairs))

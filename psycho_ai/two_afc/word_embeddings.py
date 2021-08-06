@@ -1,4 +1,4 @@
-__all__ = ['get_glove_100d', 'pse', 'jnd', 'plot_pse', 'bisect_search', 'twoafc_experiment', 'similarity', 'psy_cur', 'pse2']
+__all__ = ['get_glove_100d', 'pse', 'jnd', 'plot_pse', 'bisect_search', 'twoafc_experiment', 'similarity', 'psy_cur']
 
 import os 
 import wget
